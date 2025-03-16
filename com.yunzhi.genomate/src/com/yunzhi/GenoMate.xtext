@@ -1,0 +1,447 @@
+grammar com.yunzhi.GenoMate with org.eclipse.xtext.common.Terminals
+
+generate genoMate "http://www.yunzhi.com/GenoMate"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+// 根规则：模型生成器定义
+GenoMate:
+    (globalConfig=GlobalConfig)?
+    model=Model
+    generateSection = GenerateSection
+    mappings+=Mapping*
+;
+
+///////////////////////
+// 全局配置
+///////////////////////
+// 全局配置块，包含描述和默认注解变量
+GlobalConfig:
+    'global' '{'
+        'package:' package=STRING
+        ('defaultAnnotations' '{' (varDefaultAnnotations+=VariableDeclaration)* '}')?  // 全局注解变量
+    '}'
+;
+
+///////////////////////
+// 模型定义
+///////////////////////
+// 模型定义，包含模型名称和字段
+Model:
+    'model' name=ID '{'
+        fields+=Field*
+    '}'
+;
+
+// 字段定义，包含类型和名称
+Field:
+    (type=Type) 
+    name=ID ';'
+;
+
+
+
+///////////////////////
+// 注解系统
+///////////////////////
+// Lombok 注解
+LombokAnnotation:
+    '@' name=LombokType
+    ('(' parameters=AnnotationParameters? ')')?
+;
+
+// MyBatis-Plus 模型注解
+MybatisPlusModelAnnotation:
+    '@' name=MybatisPlusModelType 
+    ('(' parameters=AnnotationParameters? ')')?
+;
+
+// MyBatis-Plus 字段注解
+MybatisPlusFieldAnnotation:
+    '@' name=MybatisPlusFieldType
+    ('(' parameters=AnnotationParameters? ')')?
+;
+
+// Bean 验证注解
+BeanValidationAnnotation:
+    '@' name=BeanValidationType
+    ('(' parameters=AnnotationParameters? ')')?
+;
+
+// Jackson 注解
+JacksonAnnotation:
+    '@' name=JacksonType
+    ('(' parameters=AnnotationParameters? ')')?
+;
+
+// 注解参数，多个参数用逗号分隔
+AnnotationParameters:
+    annparameters+=Parameter (',' parameters+=Parameter)*
+;
+
+// 注解参数键值对
+Parameter:
+    key=ID '=' value=Literal
+;
+
+///////////////////////
+// 生成规则
+///////////////////////
+// 生成规则块，包含多个生成规则
+GenerateSection:
+    'generate' '{'
+        rules+=GenerationRule+
+    '}'
+;
+
+// 生成规则类型：PO、DTO、VO
+GenerationRule:
+    PoRule | DtoRule | VoRule
+;
+
+// PO 生成规则
+PoRule:
+    'po' 'for' model=[Model|ID] '{'
+    	(serializable='Serializable')?
+        ('lombok:' lombokAnnotation+=LombokAnnotation*)?
+        ('mybatis-plus:' mybatisPlusModelAnnotation+=MybatisPlusModelAnnotation*)?
+        ('fieldAnnotations' '{' fieldAnns+=FieldAnnotation* '}')?
+        ('fieldAdd' '{' addField+=PoAddField* '}')?
+    '}'
+;
+
+// DTO 生成规则
+DtoRule:
+    'dto' 'for' model=[Model|ID] '{'
+        dtos+=DtoDefinition+
+    '}'
+;
+
+// VO 生成规则
+VoRule:
+    'vo' 'for' model=[Model|ID] '{'
+        vos+=VoDefinition+
+    '}'
+;
+
+// DTO 定义
+DtoDefinition:
+    'dto' name=ID '{' 
+    	(serializable='Serializable')?
+        ('lombok:' lombokAnnotation+=LombokAnnotation*)?
+        ('fieldExclude' '{' (exclusions+=Exclusions* | ('excludeAll:' excludeAll=BOOL ';')) '}') ?
+        ('fieldValidation' '{' fieldAnnotationsBlock=FieldValidationBlock '}')?
+        ('fieldAdd' '{' addField+=DtoAddField* '}')?
+    '}'
+;
+
+
+// VO 定义
+VoDefinition:
+    'vo' name=ID '{'
+    	(serializable='Serializable')?
+        ('lombok:' lombokAnnotation+=LombokAnnotation*)?
+        ('fieldExclude' '{' (exclusions+=Exclusions* | ('excludeAll:' excludeAll=BOOL ';')) '}') ?
+        ('fieldJackson' '{' jacksons+=VoJackson* '}')?
+        ('fieldAdd' '{' addField+=VoAddField* '}')?
+    '}'
+;
+
+
+// PO 字段注解
+FieldAnnotation:
+    '*' field=[Field|QualifiedName] ':' annList+=MybatisPlusFieldAnnotation*
+;
+
+// DTO 字段验证块
+FieldValidationBlock:
+    {FieldValidationBlock} 
+    actionGlobal+=GlobalAction*
+    actionLocal+=LocalLoopAction*
+    actionSingle=SingleAction?
+;
+
+// 单个设置
+SingleAction:
+	'single:' '{' validations+=DtoValidation+ '}'
+;
+
+// 循环语句
+LocalLoopAction:
+    'local:''foreach' 'field' '{'
+        varDeclarations+=VariableDeclaration*
+        actions+=LocalAction+ 
+    '}'
+;
+
+// 全局设置
+GlobalAction:
+    'global:' 'set' 'to'  variable=[VariableDeclaration|ID] ';'
+;
+
+// 注解动作
+LocalAction:
+    'if' 'field' condition=TypeCondition '{'    
+        'set' 'to' variable=[VariableDeclaration|ID] ';'
+    '}'
+;
+
+// 类型条件
+TypeCondition:
+    OrTypeCondition
+;
+
+// 或类型条件
+OrTypeCondition:
+    left=AndTypeCondition ('||' right+=AndTypeCondition)*
+;
+
+// 与类型条件
+AndTypeCondition:
+    left=TypeEqualityCondition ('&&' right+=TypeEqualityCondition)*
+;
+
+// 类型相等条件
+TypeEqualityCondition:
+    'type' ( isEqual='==' | isNotEqual='!=') type=Type
+;
+
+// 变量声明
+VariableDeclaration:
+    'var' name=ID '=' annotation=BeanValidationAnnotation ';'
+;
+
+// PO 添加字段
+PoAddField:
+    '+' properties=PropertyDeclaration 
+    (':' annotationList+=MybatisPlusFieldAnnotation*)?
+;
+
+// DTO 添加字段
+DtoAddField:
+    '+' properties=PropertyDeclaration 
+    (':' annotationList+=BeanValidationAnnotation*)?
+;
+
+// VO 添加字段
+VoAddField:
+    '+' properties=PropertyDeclaration 
+    (':' annotationList+=JacksonAnnotation*)?
+;
+
+// 排除字段
+Exclusions:
+    '-' field=[Field|QualifiedName]
+;
+
+// DTO 验证规则
+DtoValidation:
+    '*' field=[Field|QualifiedName] ':' annList+=BeanValidationAnnotation*
+;
+
+// VO Jackson 注解规则
+VoJackson:
+    '*' field=[Field|QualifiedName] ':' annList+=JacksonAnnotation*
+;
+
+///////////////////////
+// 属性声明
+///////////////////////
+// 属性声明，包含类型、名称和默认值
+PropertyDeclaration:
+    static = 'static'?
+    final = 'final'?
+    (type=Type) 
+    name=ID 
+    (defaultClause=DefaultClause)?
+;
+
+// 默认值子句
+DefaultClause:
+    '=' Literal
+;
+
+///////////////////////
+// 映射规则
+///////////////////////
+// 模型到 VO 的映射规则
+Mapping:
+    ModelToVOMapping | DTOToModelMapping
+;
+
+// 模型到 VO 的映射
+ModelToVOMapping:
+    'mapping' 'from' 'Model' source=[Model|ID] 
+    'to' 'VO' target=[VoDefinition|ID] '{'
+        (rules+=MappingRule* | 'target.all' '=' 'source.all' ';') 
+    '}'
+;
+
+// DTO 到模型的映射
+DTOToModelMapping:
+    'mapping' 'from' 'DTO' source=[DtoDefinition|ID] 
+    'to' 'Model' target=[Model|ID] '{'
+        (rules+=MappingRule* | 'target.all' '=' 'source.all' ';') 
+    '}'
+;
+
+// 映射规则
+MappingRule:
+    'target.' targetField=[Field|QualifiedName] 
+    '=' ('source.' sourceField=[Field|QualifiedName] 
+    | default=Literal ) ';'
+;
+
+// Bean 验证注解枚举
+enum BeanValidationType:
+    AssertFalse = 'AssertFalse' |
+    AssertTrue = 'AssertTrue' |
+    DecimalMax = 'DecimalMax' |
+    DecimalMin = 'DecimalMin' |
+    Digits = 'Digits' |
+    Email = 'Email' |
+    Future = 'Future' |
+    FutureOrPresent = 'FutureOrPresent' |
+    Max = 'Max' |
+    Min = 'Min' |
+    Negative = 'Negative' |
+    NegativeOrZero = 'NegativeOrZero' |
+    NotBlank = 'NotBlank' |
+    NotEmpty = 'NotEmpty' |
+    NotNull = 'NotNull' |
+    Null = 'Null' |
+    Past = 'Past' |
+    PastOrPresent = 'PastOrPresent' |
+    Pattern = 'Pattern' |
+    Positive = 'Positive' |
+    PositiveOrZero = 'PositiveOrZero' |
+    Size = 'Size'
+;
+
+// MyBatis-Plus 模型注解枚举
+enum MybatisPlusModelType:
+    KeySequence = 'KeySequence' |
+    TableName = 'TableName'
+;
+
+// MyBatis-Plus 字段注解枚举
+enum MybatisPlusFieldType:
+    OrderBy = 'OrderBy' |
+    TableField = 'TableField' |
+    TableId = 'TableId' |
+    TableLogic = 'TableLogic' |
+    Version = 'Version'
+;
+
+// Jackson 注解枚举
+enum JacksonType:
+    JsonAlias = 'JsonAlias' |
+    JsonAnyGetter = 'JsonAnyGetter' |
+    JsonAnySetter = 'JsonAnySetter' |
+    JsonAutoDetect = 'JsonAutoDetect' |
+    JsonDeserialize = 'JsonDeserialize' |
+    JsonFormat = 'JsonFormat' |
+    JsonIgnore = 'JsonIgnore' |
+    JsonIgnoreProperties = 'JsonIgnoreProperties' |
+    JsonInclude = 'JsonInclude' |
+    JsonRootName = 'JsonRootName' |
+    JsonSerialize = 'JsonSerialize' |
+    JsonTypeInfo = 'JsonTypeInfo' |
+    JsonUnwrapped = 'JsonUnwrapped' |
+    JsonValue = 'JsonValue' |
+    JsonView = 'JsonView' |
+    JsonProperty = 'JsonProperty'
+;
+
+// Lombok 注解枚举
+enum LombokType:
+    Accessors = 'Accessors' |
+    AllArgsConstructor = 'AllArgsConstructor' |
+    Builder = 'Builder' |
+    Data = 'Data' |
+    EqualsAndHashCode = 'EqualsAndHashCode' |
+    Getter = 'Getter' |
+    NoArgsConstructor = 'NoArgsConstructor' |
+    RequiredArgsConstructor = 'RequiredArgsConstructor' |
+    Setter = 'Setter' |
+    Singular = 'Singular' |
+    SuperBuilder = 'SuperBuilder' |
+    ToString = 'ToString'
+;
+
+
+
+///////////////////////
+// 数据类型
+///////////////////////
+
+// 数组类型
+
+
+// 类型定义，包括内置类型和自定义类型
+Type:
+	GenericDataType | ArrayType | SimpleType | NormalType
+;
+
+SimpleType:
+	builtInType=BuiltInType
+;
+
+NormalType:
+    customType=ID  // 拆分为内置类型和自定义类型引用
+;
+GenericDataType:
+    containerTypeName=ID LESS containedTypeName=Type GREATER
+;
+
+ArrayType:
+    elementType=(SimpleType | NormalType) LBRACKET RBRACKET
+;
+
+// 内置类型枚举
+enum BuiltInType:
+	int = 'int' |
+	long = 'long' |
+	Integer = 'Integer' |
+	Double = 'Double' |
+	String = 'String'|
+	LocalDate = 'LocalDate'|
+	LocalDateTime = 'LocalDateTime' |
+	BigDecimal = 'BigDecimal'
+;
+
+// 字面量类型
+Literal:
+    STRING | INT | DECIMAL | BOOL  // 支持浮点数
+;
+
+// 覆盖 INT 终端定义
+@Override 
+terminal INT returns ecore::EInt: 
+    ('0'..'9')+
+;
+
+// 十进制数终端定义
+terminal DECIMAL: INT '.' INT;
+
+
+// 布尔值终端定义
+BOOL:
+    'true' | 'false'
+;
+
+// 覆盖 ID 终端定义
+@Override 
+terminal ID: 
+    ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+;
+terminal LESS: '<';
+terminal GREATER: '>';
+terminal LBRACKET: '[';
+terminal RBRACKET: ']';
+
+
+// 限定名称
+QualifiedName:
+    ID ('.' ID)*
+;

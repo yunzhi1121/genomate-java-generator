@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="genoMate" nsURI="http://www.yunzhi.com/GenoMate" nsPrefix="genoMate">
+  <eClassifiers xsi:type="ecore:EClass" name="GenoMate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalConfig" eType="#//GlobalConfig"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//Model"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generateSection" eType="#//GenerateSection"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mappings" upperBound="-1"
+        eType="#//Mapping" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GlobalConfig">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="package" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="varDefaultAnnotations"
+        upperBound="-1" eType="#//VariableDeclaration" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Model">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fields" upperBound="-1"
+        eType="#//Field" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Field">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LombokAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//LombokType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//AnnotationParameters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MybatisPlusModelAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//MybatisPlusModelType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//AnnotationParameters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MybatisPlusFieldAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//MybatisPlusFieldType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//AnnotationParameters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BeanValidationAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//BeanValidationType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//AnnotationParameters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="JacksonAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="#//JacksonType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" eType="#//AnnotationParameters"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnotationParameters">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annparameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GenerateSection">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
+        eType="#//GenerationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GenerationRule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//Model"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PoRule" eSuperTypes="#//GenerationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serializable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lombokAnnotation" upperBound="-1"
+        eType="#//LombokAnnotation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mybatisPlusModelAnnotation"
+        upperBound="-1" eType="#//MybatisPlusModelAnnotation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fieldAnns" upperBound="-1"
+        eType="#//FieldAnnotation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="addField" upperBound="-1"
+        eType="#//PoAddField" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DtoRule" eSuperTypes="#//GenerationRule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dtos" upperBound="-1" eType="#//DtoDefinition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VoRule" eSuperTypes="#//GenerationRule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vos" upperBound="-1" eType="#//VoDefinition"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DtoDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serializable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lombokAnnotation" upperBound="-1"
+        eType="#//LombokAnnotation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exclusions" upperBound="-1"
+        eType="#//Exclusions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="excludeAll" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fieldAnnotationsBlock"
+        eType="#//FieldValidationBlock" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="addField" upperBound="-1"
+        eType="#//DtoAddField" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VoDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serializable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lombokAnnotation" upperBound="-1"
+        eType="#//LombokAnnotation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exclusions" upperBound="-1"
+        eType="#//Exclusions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="excludeAll" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="jacksons" upperBound="-1"
+        eType="#//VoJackson" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="addField" upperBound="-1"
+        eType="#//VoAddField" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FieldAnnotation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annList" upperBound="-1"
+        eType="#//MybatisPlusFieldAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FieldValidationBlock">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionGlobal" upperBound="-1"
+        eType="#//GlobalAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionLocal" upperBound="-1"
+        eType="#//LocalLoopAction" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actionSingle" eType="#//SingleAction"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validations" upperBound="-1"
+        eType="#//DtoValidation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LocalLoopAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="varDeclarations" upperBound="-1"
+        eType="#//VariableDeclaration" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
+        eType="#//LocalAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GlobalAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="#//VariableDeclaration"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LocalAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//TypeCondition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variable" eType="#//VariableDeclaration"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeCondition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OrTypeCondition" eSuperTypes="#//TypeCondition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//AndTypeCondition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" upperBound="-1"
+        eType="#//AndTypeCondition" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AndTypeCondition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//TypeEqualityCondition"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" upperBound="-1"
+        eType="#//TypeEqualityCondition" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TypeEqualityCondition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEqual" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNotEqual" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotation" eType="#//BeanValidationAnnotation"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PoAddField">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" eType="#//PropertyDeclaration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotationList" upperBound="-1"
+        eType="#//MybatisPlusFieldAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DtoAddField">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" eType="#//PropertyDeclaration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotationList" upperBound="-1"
+        eType="#//BeanValidationAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VoAddField">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" eType="#//PropertyDeclaration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotationList" upperBound="-1"
+        eType="#//JacksonAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Exclusions">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//Field"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DtoValidation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annList" upperBound="-1"
+        eType="#//BeanValidationAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="VoJackson">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="field" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annList" upperBound="-1"
+        eType="#//JacksonAnnotation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PropertyDeclaration">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="static" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="final" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Mapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
+        eType="#//MappingRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelToVOMapping" eSuperTypes="#//Mapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Model"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//VoDefinition"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DTOToModelMapping" eSuperTypes="#//Mapping">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//DtoDefinition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Model"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MappingRule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetField" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceField" eType="#//Field"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="BeanValidationType">
+    <eLiterals name="AssertFalse" literal="AssertFalse"/>
+    <eLiterals name="AssertTrue" value="1" literal="AssertTrue"/>
+    <eLiterals name="DecimalMax" value="2" literal="DecimalMax"/>
+    <eLiterals name="DecimalMin" value="3" literal="DecimalMin"/>
+    <eLiterals name="Digits" value="4" literal="Digits"/>
+    <eLiterals name="Email" value="5" literal="Email"/>
+    <eLiterals name="Future" value="6" literal="Future"/>
+    <eLiterals name="FutureOrPresent" value="7" literal="FutureOrPresent"/>
+    <eLiterals name="Max" value="8" literal="Max"/>
+    <eLiterals name="Min" value="9" literal="Min"/>
+    <eLiterals name="Negative" value="10" literal="Negative"/>
+    <eLiterals name="NegativeOrZero" value="11" literal="NegativeOrZero"/>
+    <eLiterals name="NotBlank" value="12" literal="NotBlank"/>
+    <eLiterals name="NotEmpty" value="13" literal="NotEmpty"/>
+    <eLiterals name="NotNull" value="14" literal="NotNull"/>
+    <eLiterals name="Null" value="15" literal="Null"/>
+    <eLiterals name="Past" value="16" literal="Past"/>
+    <eLiterals name="PastOrPresent" value="17" literal="PastOrPresent"/>
+    <eLiterals name="Pattern" value="18" literal="Pattern"/>
+    <eLiterals name="Positive" value="19" literal="Positive"/>
+    <eLiterals name="PositiveOrZero" value="20" literal="PositiveOrZero"/>
+    <eLiterals name="Size" value="21" literal="Size"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MybatisPlusModelType">
+    <eLiterals name="KeySequence" literal="KeySequence"/>
+    <eLiterals name="TableName" value="1" literal="TableName"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MybatisPlusFieldType">
+    <eLiterals name="OrderBy" literal="OrderBy"/>
+    <eLiterals name="TableField" value="1" literal="TableField"/>
+    <eLiterals name="TableId" value="2" literal="TableId"/>
+    <eLiterals name="TableLogic" value="3" literal="TableLogic"/>
+    <eLiterals name="Version" value="4" literal="Version"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="JacksonType">
+    <eLiterals name="JsonAlias" literal="JsonAlias"/>
+    <eLiterals name="JsonAnyGetter" value="1" literal="JsonAnyGetter"/>
+    <eLiterals name="JsonAnySetter" value="2" literal="JsonAnySetter"/>
+    <eLiterals name="JsonAutoDetect" value="3" literal="JsonAutoDetect"/>
+    <eLiterals name="JsonDeserialize" value="4" literal="JsonDeserialize"/>
+    <eLiterals name="JsonFormat" value="5" literal="JsonFormat"/>
+    <eLiterals name="JsonIgnore" value="6" literal="JsonIgnore"/>
+    <eLiterals name="JsonIgnoreProperties" value="7" literal="JsonIgnoreProperties"/>
+    <eLiterals name="JsonInclude" value="8" literal="JsonInclude"/>
+    <eLiterals name="JsonRootName" value="9" literal="JsonRootName"/>
+    <eLiterals name="JsonSerialize" value="10" literal="JsonSerialize"/>
+    <eLiterals name="JsonTypeInfo" value="11" literal="JsonTypeInfo"/>
+    <eLiterals name="JsonUnwrapped" value="12" literal="JsonUnwrapped"/>
+    <eLiterals name="JsonValue" value="13" literal="JsonValue"/>
+    <eLiterals name="JsonView" value="14" literal="JsonView"/>
+    <eLiterals name="JsonProperty" value="15" literal="JsonProperty"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="LombokType">
+    <eLiterals name="Accessors" literal="Accessors"/>
+    <eLiterals name="AllArgsConstructor" value="1" literal="AllArgsConstructor"/>
+    <eLiterals name="Builder" value="2" literal="Builder"/>
+    <eLiterals name="Data" value="3" literal="Data"/>
+    <eLiterals name="EqualsAndHashCode" value="4" literal="EqualsAndHashCode"/>
+    <eLiterals name="Getter" value="5" literal="Getter"/>
+    <eLiterals name="NoArgsConstructor" value="6" literal="NoArgsConstructor"/>
+    <eLiterals name="RequiredArgsConstructor" value="7" literal="RequiredArgsConstructor"/>
+    <eLiterals name="Setter" value="8" literal="Setter"/>
+    <eLiterals name="Singular" value="9" literal="Singular"/>
+    <eLiterals name="SuperBuilder" value="10" literal="SuperBuilder"/>
+    <eLiterals name="ToString" value="11" literal="ToString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="builtInType" eType="#//BuiltInType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NormalType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GenericDataType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="containerTypeName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="containedTypeName" eType="#//Type"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrayType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elementType" eType="#//Type"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="BuiltInType">
+    <eLiterals name="int" literal="int"/>
+    <eLiterals name="long" value="1" literal="long"/>
+    <eLiterals name="Integer" value="2" literal="Integer"/>
+    <eLiterals name="Double" value="3" literal="Double"/>
+    <eLiterals name="String" value="4" literal="String"/>
+    <eLiterals name="LocalDate" value="5" literal="LocalDate"/>
+    <eLiterals name="LocalDateTime" value="6" literal="LocalDateTime"/>
+    <eLiterals name="BigDecimal" value="7" literal="BigDecimal"/>
+  </eClassifiers>
+</ecore:EPackage>

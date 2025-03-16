@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: com.yunzhi.genomate
+Bundle-ManifestVersion: 2
+Bundle-Name: com.yunzhi.genomate
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.yunzhi.genomate; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.19.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.38.0",
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: com.yunzhi.parser.antlr.internal,
+ com.yunzhi.genoMate,
+ com.yunzhi.genoMate.util,
+ com.yunzhi.serializer,
+ com.yunzhi.scoping,
+ com.yunzhi.parser.antlr,
+ com.yunzhi,
+ com.yunzhi.services,
+ com.yunzhi.genoMate.impl,
+ com.yunzhi.validation,
+ com.yunzhi.generator
+Import-Package: org.apache.log4j
